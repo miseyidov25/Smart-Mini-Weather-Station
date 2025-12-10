@@ -1,0 +1,46 @@
+@startuml System_Design_Layered_Architecture
+
+title Smart Weather Mini Station Simulation\nLayered Architecture\n
+
+package "User Interface Layer" {
+    [Display]
+    [Keyboard]
+    [Development\nConsole] #green
+}
+
+package "System Control Layer" {
+    [FSM] #red
+}
+
+package "Subsystems Layer" {
+    [Environment\nSimulator]
+    [Sensor\nSimulator]
+    [Data Processor]
+    [Data Logger]
+}
+
+package "Hardware Abstraction Layer = HAL" {
+    [Virtual Hardware IO] #grey
+}
+
+[FSM] -down-> [Environment\nSimulator]
+[FSM] -down-> [Sensor\nSimulator]
+[FSM] -down-> [Data Processor]
+[FSM] -down-> [Data Logger]
+
+[FSM] -up-> [Display]
+[FSM] -up-> [Keyboard]
+[FSM] -up-> [Development\nConsole]
+
+[Environment\nSimulator] --> [Virtual Hardware IO]
+[Sensor\nSimulator] --> [Virtual Hardware IO]
+[Data Processor] --> [Virtual Hardware IO]
+[Data Logger] --> [Virtual Hardware IO]
+
+[Development\nConsole] -down-> [Keyboard]
+[Development\nConsole] -down-> [Display]
+
+[Display] --> [Virtual Hardware IO]
+[Keyboard] --> [Virtual Hardware IO]
+
+@enduml
