@@ -1,5 +1,5 @@
 #include "display.h"
-#include "appInfo.h"
+#include "../../include/appInfo.h"
 #include "devConsole.h"
 #include "systemErrors.h"
 

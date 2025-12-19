@@ -1,3 +1,5 @@
+#include "../include/events.h"
+
 // global variables
 char * eventEnumToText[] =
 {

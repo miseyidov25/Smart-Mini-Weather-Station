@@ -28,4 +28,6 @@ systemErrors_t getSystemErrorBits(void);
 /// Example: "11000000"
 const char *getSystemErrorBitsString(void);
 
+void SystemError_Report(const char *msg);
+
 #endif

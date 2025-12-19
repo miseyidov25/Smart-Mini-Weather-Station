@@ -1,4 +1,6 @@
 #include "systemErrors.h"
+#include "devConsole.h"
+
 
 #include <stddef.h>
 
@@ -35,4 +37,9 @@ const char *getSystemErrorBitsString(void)
       }
    }
    return systemErrorBitsString;
+}
+
+void SystemError_Report(const char *msg)
+{
+    DCSshowSystemError(msg);
 }

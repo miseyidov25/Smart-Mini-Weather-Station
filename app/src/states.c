@@ -1,3 +1,5 @@
+#include "../include/states.h"
+
 char * stateEnumToText[] =
 {
     "S_NO",                         ///< Unknown state (initial uninitialized state)
