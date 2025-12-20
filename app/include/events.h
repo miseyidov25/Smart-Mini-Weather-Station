@@ -9,6 +9,13 @@ typedef enum {
     E_SENSOR_INIT_DONE,      ///< Sensors initialized successfully
     E_INIT_ERROR,            ///< Initialization or config error
 
+    E_MENU_START,            ///< Main menu started
+    E_MENU_PAUSE,            ///< Main menu paused
+    E_MENU_EXIT,             ///< Main menu exited
+
+    E_SHOW_HISTORY,
+    E_BACK_TO_MENU,
+
     E_TICK,                  ///< Main simulation tick (time to simulate new step)
     E_ENV_UPDATED,           ///< Environment model has been updated
     E_SENSOR_READ,           ///< Simulated sensor data ready

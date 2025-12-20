@@ -8,6 +8,11 @@ typedef enum {
     S_INITIALISE_SYSTEM,          ///< Initialize simulation engine, load config
     S_INITIALISE_SENSORS,         ///< Setup simulated sensors
 
+    S_MENU,                       ///< Main menu state
+    S_DASHBOARD,                  ///< Dashboard display state
+    S_HISTORY,                    ///< History display state
+
+
     S_IDLE,                       ///< Waiting state between cycles
     S_UPDATE_ENVIRONMENT,         ///< Update simulated environment (temperature, wind, etc.)
     S_READ_SENSORS,               ///< Read simulated sensor values

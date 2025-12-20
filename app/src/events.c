@@ -8,7 +8,14 @@ char * eventEnumToText[] =
     "E_START",                 ///< Program has started
     "E_INIT_DONE",             ///< System initialization completed
     "E_SENSOR_INIT_DONE",      ///< Sensors initialized successfully
-    "E_INIT_ERROR",            ///< Initialization or config error
+    "E_INIT_ERROR",    
+    
+    "E_MENU_START",            ///< Main menu started
+    "E_MENU_PAUSE",            ///< Main menu paused
+    "E_MENU_EXIT",             ///< Main menu exited
+
+    "E_SHOW_HISTORY",          ///< Show history command
+    "E_BACK_TO_MENU",          ///< Back to menu command
 
     "E_TICK",                  ///< Main simulation tick (time to simulate new step)
     "E_ENV_UPDATED",           ///< Environment model has been updated
