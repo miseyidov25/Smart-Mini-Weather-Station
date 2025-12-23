@@ -45,6 +45,7 @@ void S_SwitchUnits_onEntry(void);
 void S_Menu_onEntry(void);
 void S_Dashboard_onEntry(void);
 void S_Init_Dashboard_onEntry(void);
+void S_UpdateEnvironment_onEntry(void);
 
 
 // Exception function, for gracefull shutdown
@@ -77,7 +78,8 @@ int main(void) {
     FSM_AddTransition(&(transition_t){ S_START,              E_START,             S_INITIALISE_SYSTEM });
     FSM_AddTransition(&(transition_t){ S_INITIALISE_SYSTEM,  E_INIT_DONE,         S_INIT_DASHBOARD });
     FSM_AddTransition(&(transition_t){ S_INIT_DASHBOARD,     E_DASHBOARD_INIT,    S_READ_SENSORS });
-    FSM_AddTransition(&(transition_t){ S_READ_SENSORS,       E_SENSOR_READ,       S_DASHBOARD });
+    FSM_AddTransition(&(transition_t){ S_READ_SENSORS,       E_SENSOR_READ,       S_UPDATE_ENVIRONMENT });
+    FSM_AddTransition(&(transition_t){ S_UPDATE_ENVIRONMENT, E_ENV_UPDATED,       S_DASHBOARD });
     FSM_AddTransition(&(transition_t){ S_SWITCH_UNITS,       E_SWITCH_UNITS,      S_DASHBOARD });
     FSM_AddTransition(&(transition_t){ S_DASHBOARD,          E_SWITCH_UNITS,      S_SWITCH_UNITS });
     FSM_AddTransition(&(transition_t){ S_DASHBOARD,          E_SHOW_HISTORY,      S_HISTORY });
@@ -114,34 +116,10 @@ void S_InitSystem_onEntry(void)
     DCSinitialise();
     KYBinitialise();
 
+    DSPclear();
     FSM_AddEvent(E_INIT_DONE);
 }
 
-void S_ReadSensors_onEntry(void)
-{
-    DSPclear();
-
-        // Generate realistic fake sensor data only once per read
-    g_temperature = rand_range(-5.0f, 35.0f);  // Celsius
-    g_humidity    = rand_range(20.0f, 90.0f);  // Percent
-
-    float temp = g_unit_celsius
-        ? g_temperature
-        : (g_temperature * 9.0f / 5.0f + 32.0f);
-    const char* unit = g_unit_celsius ? "C" : "F";
-
-    const char* icon = "[SUN]";
-    if (g_humidity < 40) icon = "[SUN]";
-    else if (g_humidity < 75) icon = "[CLOUD]";
-    else icon = "[RAIN]";
-
-    DSPshow(1, "Temp: %.1f %s", temp, unit);
-    DSPshow(2, "Humidity: %.0f %%", g_humidity);
-    DSPshow(3, "Weather: %s", icon);
-
-    // Simulated sensor init OK
-    FSM_AddEvent(E_SENSOR_READ);
-}
 
 
 void S_Init_Dashboard_onEntry(void)
@@ -160,7 +138,44 @@ void S_Init_Dashboard_onEntry(void)
 
 void S_Dashboard_onEntry(void)
 {
-    
+    char c;
+
+    c = DCSsimulationSystemInputChar(
+        "Press: r=read sensor, u=switch units, h=history, q=exit",
+        "ruhq"
+    );
+
+    switch (tolower(c))
+    {
+        case 'r':
+            FSM_AddEvent(E_SENSOR_READ);
+            break;
+
+        case 'u':
+            FSM_AddEvent(E_SWITCH_UNITS);
+            break;
+
+        case 'h':
+            FSM_AddEvent(E_SHOW_HISTORY);
+            break;
+
+        case 'q':
+            FSM_AddEvent(E_DASHBOARD_EXIT);
+            break;
+
+        default:
+            /* no event */
+            break;
+    }
+}
+
+
+
+
+void S_UpdateEnvironment_onEntry(void)
+{
+    // TODO: Use this to update Temp/Humidity
+
     float temp = g_unit_celsius
         ? g_temperature
         : (g_temperature * 9.0f / 5.0f + 32.0f);
@@ -171,44 +186,17 @@ void S_Dashboard_onEntry(void)
     else if (g_humidity < 75) icon = "[CLOUD]";
     else icon = "[RAIN]";
 
-
     DSPshow(1, "Temp: %.1f %s", temp, unit);
     DSPshow(2, "Humidity: %.0f %%", g_humidity);
     DSPshow(3, "Weather: %s", icon);
 
-    while (1)
-    {
-       
-        // Non-blocking keyboard on Windows
-        char c = get_key_nonblocking();
-        if (c) {
-            switch (tolower(c)) {
-                case 'r': FSM_AddEvent(E_SENSOR_READ); return;
-                case 'u': FSM_AddEvent(E_SWITCH_UNITS); return;
-                case 'h': FSM_AddEvent(E_SHOW_HISTORY); return;
-                case 'q': FSM_AddEvent(E_DASHBOARD_EXIT); return;
-                default: break;
-            }
-        }
-
-        delay_ms(500);
-    }
-}
-
-
-
-
-void S_UpdateEnvironment_onEntry(void)
-{
-    // TODO: Use this to update Temp/Humidity
-    // Simulate environment update
     DCSdebugSystemInfo("Environment updated");
     FSM_AddEvent(E_ENV_UPDATED);
 }
 
 void S_ReadSensors_onEntry(void)
 {
-    // Generate realistic fake sensor data only once per read
+    // Generate sensor data
     g_temperature = rand_range(-5.0f, 35.0f);  // Celsius
     g_humidity    = rand_range(20.0f, 90.0f);  // Percent
 

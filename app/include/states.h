@@ -6,7 +6,6 @@ typedef enum {
     S_START,                      ///< Program start
 
     S_INITIALISE_SYSTEM,          ///< Initialize simulation engine, load config
-    S_READ_SENSORS,         ///< Setup simulated sensors
     S_INIT_DASHBOARD,             ///< Initialize dashboard display
 
     S_SWITCH_UNITS,               ///< Switch temperature units
