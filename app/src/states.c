@@ -6,9 +6,10 @@ char * stateEnumToText[] =
     "S_START",                      ///< Program start
 
     "S_INITIALISE_SYSTEM",          ///< Initialize simulation engine, load config
-    "S_INITIALISE_SENSORS",         ///< Setup simulated sensors
+    "S_READ_SENSORS",         ///< Setup simulated sensors
+    "S_INIT_DASHBOARD",             ///< Initialize dashboard display
 
-    "S_MENU",                       ///< Main menu state
+    "S_SWITCH_UNITS",               ///< Switch temperature units
     "S_DASHBOARD",                  ///< Dashboard display state
     "S_HISTORY",                    ///< History display state
 
