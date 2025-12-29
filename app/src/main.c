@@ -244,6 +244,7 @@ void S_History_onEntry(void)
         return;
     }
 
+    DSPclearLine(6);DSPclearLine(7);DSPclearLine(8);
     // Start at newest entry
     int view_index = g_history_count - 1;
 
@@ -261,8 +262,9 @@ void S_History_onEntry(void)
         DSPshow(1, "Temp: %.1f %s", temp, unit);
         DSPshow(2, "Humidity: %.0f %%", g_history[view_index].humidity);
         DSPshow(3, "Entry: %d / %d", view_index + 1, g_history_count);
-        DSPshow(4, "n - newer   p - older");
-        DSPshow(5, "b - back");
+        DSPshow(5, "n - newer   p - older");
+        DSPshow(6, "b - back");
+
 
         char c = DCSsimulationSystemInputChar(
             "Press: n=newer, p=older, b=back",
