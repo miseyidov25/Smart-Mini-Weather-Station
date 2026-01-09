@@ -5,6 +5,7 @@
 #include <time.h>
 
 
+
 #include "fsm_functions/fsm.h"
 #include "console_functions/keyboard.h"
 #include "console_functions/display.h"
@@ -13,14 +14,11 @@
 
 #include "../include/events.h"
 #include "../include/states.h"
+#include "history.h"
+
 
 extern char * eventEnumToText[];
 extern char * stateEnumToText[];
-
-typedef struct {
-    float temperature_c;
-    float humidity;
-} HistoryEntry;
 
 
 state_t state;
@@ -31,12 +29,6 @@ event_t previousEvent;
 float g_temperature = 0.0f;
 float g_humidity = 0.0f;
 int   g_unit_celsius = 1; // 1=C, 0=F
-
-#define HISTORY_SIZE 24
-
-HistoryEntry g_history[HISTORY_SIZE];
-int g_history_index = 0;
-int g_history_count = 0;
 
 
 float rand_range(float min, float max);
@@ -236,7 +228,7 @@ void S_Stop_onEntry(void)
 
 void S_History_onEntry(void)
 {
-    if (g_history_count == 0) {
+    if (history_count() == 0) {
         DSPclear();
         DSPshow(0, "No history available");
         delay_ms(1500);
@@ -246,11 +238,12 @@ void S_History_onEntry(void)
 
     DSPclearLine(6);DSPclearLine(7);DSPclearLine(8);
     // Start at newest entry
-    int view_index = g_history_count - 1;
+    int view_index = history_count() - 1;
 
     while (1)
     {
-        float temp_c = g_history[view_index].temperature_c;
+        HistoryEntry entry = history_get(view_index);
+        float temp_c = entry.temperature_c;
         float temp = g_unit_celsius
             ? temp_c
             : (temp_c * 9.0f / 5.0f + 32.0f);
@@ -260,8 +253,8 @@ void S_History_onEntry(void)
         DSPclear();
         DSPshow(0, "=== History ===");
         DSPshow(1, "Temp: %.1f %s", temp, unit);
-        DSPshow(2, "Humidity: %.0f %%", g_history[view_index].humidity);
-        DSPshow(3, "Entry: %d / %d", view_index + 1, g_history_count);
+        DSPshow(2, "Humidity: %.0f %%", entry.humidity);
+        DSPshow(3, "Entry: %d / %d", view_index + 1, history_count());
         DSPshow(5, "n - newer   p - older");
         DSPshow(6, "b - back");
 
@@ -273,7 +266,7 @@ void S_History_onEntry(void)
 
         switch (tolower(c)) {
             case 'n':
-                if (view_index < g_history_count - 1)
+                if (view_index < history_count() - 1)
                     view_index++;
                 break;
 
@@ -305,15 +298,4 @@ void delay_ms(uint32_t d)
 float rand_range(float min, float max)
 {
     return min + ((float)rand() / (float)RAND_MAX) * (max - min);
-}
-
-void history_add(float temp_c, float humidity)
-{
-    g_history[g_history_index].temperature_c = temp_c;
-    g_history[g_history_index].humidity = humidity;
-
-    g_history_index = (g_history_index + 1) % HISTORY_SIZE;
-
-    if (g_history_count < HISTORY_SIZE)
-        g_history_count++;
 }
