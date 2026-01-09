@@ -66,12 +66,11 @@ int main(void) {
 	//           State                                   onEntry()                    onExit()
 	FSM_AddState(S_START,              &(state_funcs_t){ S_Start_onEntry,             NULL });
 	FSM_AddState(S_INITIALISE_SYSTEM,  &(state_funcs_t){ S_InitSystem_onEntry,        NULL });
-	FSM_AddState(S_READ_SENSORS,       &(state_funcs_t){ S_ReadSensors_onEntry,       NULL });
     FSM_AddState(S_INIT_DASHBOARD,     &(state_funcs_t){ S_Init_Dashboard_onEntry,    NULL });
-    FSM_AddState(S_DASHBOARD,          &(state_funcs_t){ S_Dashboard_onEntry,         NULL });
     FSM_AddState(S_READ_SENSORS,       &(state_funcs_t){ S_ReadSensors_onEntry,       NULL });
+    FSM_AddState(S_UPDATE_ENVIRONMENT, &(state_funcs_t){ S_UpdateEnvironment_onEntry, NULL });
+    FSM_AddState(S_DASHBOARD,          &(state_funcs_t){ S_Dashboard_onEntry,         NULL });
     FSM_AddState(S_STOP,               &(state_funcs_t){ S_Stop_onEntry,              NULL });
-	FSM_AddState(S_UPDATE_ENVIRONMENT, &(state_funcs_t){ S_UpdateEnvironment_onEntry, NULL });
     FSM_AddState(S_SWITCH_UNITS,       &(state_funcs_t){ S_SwitchUnits_onEntry, 	  NULL });
     FSM_AddState(S_HISTORY,            &(state_funcs_t){ S_History_onEntry,           NULL });
 
@@ -122,7 +121,6 @@ void S_InitSystem_onEntry(void)
     DCSinitialise();
     KYBinitialise();
 
-    DSPclear();
     FSM_AddEvent(E_INIT_DONE);
 }
 

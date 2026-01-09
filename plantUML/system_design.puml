@@ -13,7 +13,6 @@ package "System Control Layer" {
 }
 
 package "Subsystems Layer" {
-    [Environment\nSimulator]
     [Sensor\nSimulator]
     [Data Processor]
     [Data Logger]
@@ -23,7 +22,7 @@ package "Hardware Abstraction Layer = HAL" {
     [Virtual Hardware IO] #grey
 }
 
-[FSM] -down-> [Environment\nSimulator]
+
 [FSM] -down-> [Sensor\nSimulator]
 [FSM] -down-> [Data Processor]
 [FSM] -down-> [Data Logger]
@@ -32,7 +31,6 @@ package "Hardware Abstraction Layer = HAL" {
 [FSM] -up-> [Keyboard]
 [FSM] -up-> [Development\nConsole]
 
-[Environment\nSimulator] --> [Virtual Hardware IO]
 [Sensor\nSimulator] --> [Virtual Hardware IO]
 [Data Processor] --> [Virtual Hardware IO]
 [Data Logger] --> [Virtual Hardware IO]
