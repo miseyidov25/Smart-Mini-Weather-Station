@@ -1,0 +1,34 @@
+@startuml
+
+hide empty description
+title Weather Station\nHistory Subsystem
+
+package "History Subsystem" {
+
+    component history_c as "history.c"
+
+    component storage as "Internal Storage"
+
+    history_c --> storage : manages
+}
+
+component main_c as "FSM / main.c"
+
+main_c --> history_c : uses
+
+note right of history_c
+Public API:
+- history_add(temp_c, humidity)
+- history_count()
+- history_get(index)
+end note
+
+note bottom of storage
+Static data:
+- g_history[HISTORY_SIZE]
+- g_history_index
+- g_history_count
+Hidden from main.c
+end note
+
+@enduml
